@@ -1,0 +1,28 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.x
+    commands:
+      - echo Installing dependencies...
+      - pip install -r requirements.txt
+      - wget -qO- https://repos.spark-packages.org | sudo tee -a /etc/apt/sources.list.d/spark-packages.list
+      - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F758CE318D77295D
+      - sudo apt-get update
+      - sudo apt-get install -y openjdk-11-jdk scala spark2.4.4
+      - export SPARK_HOME=/usr/lib/spark
+      - export PATH=$SPARK_HOME/bin:$PATH
+  pre_build:
+    commands:
+      - echo Pre-building steps...
+      - export PYSPARK_PYTHON=python3
+  build:
+    commands:
+      - echo Running Glue job scripts...
+      - python onlineretailprocessing.py
+      - python loadtoRDS.py
+artifacts:
+  files:
+    - '**/*'
+  discard-paths: yes
