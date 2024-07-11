@@ -3,19 +3,19 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      python: 3.x
+      python: 3.8
     commands:
-      - echo Installing dependencies...
+      - apt-get update
+      - apt-get install -y openjdk-8-jdk
+      - export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+      - export PATH=$JAVA_HOME/bin:$PATH
       - pip install -r requirements.txt
-  pre_build:
-    commands:
-      - echo Pre-building steps...
-      - export PYSPARK_PYTHON=python3
+
   build:
     commands:
       - echo Running Glue job scripts...
       - python Glue/LoadOnlineRetailToRDS.py
+
 artifacts:
   files:
     - '**/*'
-  discard-paths: yes
