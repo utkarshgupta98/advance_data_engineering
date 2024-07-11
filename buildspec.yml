@@ -5,22 +5,13 @@ phases:
     runtime-versions:
       python: 3.8
     commands:
-      - echo Installing dependencies...
       - pip install -r requirements.txt
-      - wget -q https://archive.apache.org/dist/spark/spark-3.1.2/spark-3.1.2-bin-hadoop3.2.tgz
-      - tar xzf spark-3.1.2-bin-hadoop3.2.tgz
-      - export SPARK_HOME=$(pwd)/spark-3.1.2-bin-hadoop3.2
-      - export PATH=$SPARK_HOME/bin:$PATH
-      - yum update -y
-      - yum install -y java-1.8.0-openjdk-devel
 
   build:
     commands:
-      - echo Running Glue job scripts...
-      - export SPARK_HOME=$(pwd)/spark-3.1.2-bin-hadoop3.2
-      - export PATH=$SPARK_HOME/bin:$PATH
-      - export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk
-      - python Glue/LoadOnlineRetailToRDS.py
+      - echo "Starting Glue job execution..."
+      - aws glue start-job-run --job-name LoadOnlineRetailToRDS --region us-east-1
+      - echo "Glue job execution initiated."
 
 artifacts:
   files:
