@@ -14,8 +14,7 @@ phases:
   build:
     commands:
       - echo Running Glue job scripts...
-      - python onlineretailprocessing.py
-      - python loadtoRDS.py
+      - python Glue/LoadOnlineRetailToRDS.py
 artifacts:
   files:
     - '**/*'
