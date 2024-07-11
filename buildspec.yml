@@ -11,16 +11,15 @@ phases:
       - tar xzf spark-3.1.2-bin-hadoop3.2.tgz
       - export SPARK_HOME=$(pwd)/spark-3.1.2-bin-hadoop3.2
       - export PATH=$SPARK_HOME/bin:$PATH
-      - apt-get update
-      - apt-get install -y openjdk-8-jdk-headless
-      - export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+      - yum update -y
+      - yum install -y java-1.8.0-openjdk-devel
 
   build:
     commands:
       - echo Running Glue job scripts...
       - export SPARK_HOME=$(pwd)/spark-3.1.2-bin-hadoop3.2
       - export PATH=$SPARK_HOME/bin:$PATH
-      - export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+      - export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk
       - python Glue/LoadOnlineRetailToRDS.py
 
 artifacts:
