@@ -5,13 +5,34 @@ phases:
     runtime-versions:
       python: 3.8
     commands:
-      - pip install -r requirements.txt
+      - pip install boto3 awscli
+
+  pre_build:
+    commands:
+      # Kinesis Setup
+      - aws kinesis create-stream --stream-name OnlineRetailDataStream --shard-count 1
+      - aws kinesis describe-stream --stream-name OnlineRetailDataStream
+
+      # Glue Setup to send data to Kinesis
+      - aws glue start-job-run --job-name create_glue_catalog_retail --region us-east-1
+      - aws glue start-job-run --job-name OnlineRetailToKinesisPython --region us-east-1
+
+
+      # Glue Job for transforming Stream data into Cleansed data
+      - aws glue start-job-run --job-name OnlineRetailDataProcessing --region us-east-1
+
+      # Create RDS instance
+      - aws rds create-db-instance --db-instance-identifier yourdbidentifier --db-instance-class db.t2.micro --engine mysql --allocated-storage 20 --master-username yourusername --master-user-password yourpassword
 
   build:
     commands:
-      - echo "Starting Glue job execution..."
+      # Load Transformed Data To RDS
       - aws glue start-job-run --job-name LoadOnlineRetailToRDS --region us-east-1
-      - echo "Glue job execution initiated."
+
+
+  post_build:
+    commands:
+      - echo "Build completed successfully"
 
 artifacts:
   files:
