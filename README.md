@@ -143,3 +143,5 @@ This project demonstrates a multi-part process for setting up a real-time data p
 - Add source details.
 - Add CodeBuild.
 Ensure all stages are green.
+
+![image](https://github.com/user-attachments/assets/3d5c0d13-8c20-4768-8c12-479faee89a7d)
